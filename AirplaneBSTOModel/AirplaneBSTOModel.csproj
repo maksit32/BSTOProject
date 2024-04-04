@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="flight_30822.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Icons\" />
+    <Folder Include="Logs\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FaultLibrary\FaultLibrary.csproj" />
+    <ProjectReference Include="..\LogLibrary\LogLibrary.csproj" />
+    <ProjectReference Include="..\TCPLibrary\TCPLibrary.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="flight_30822.ico" />
+  </ItemGroup>
+
+</Project>
