@@ -100,12 +100,13 @@ namespace AirplaneBSTOModel
 			try
 			{
 				Random r = new Random();
-				Fault fault = faultsList[r.Next(faultsList.Count) - 1];
+				Fault fault = faultsList[r.Next(faultsList.Count)];
 
-				this.ErrorCodeLabel.Content = fault.FaultCode;
-				this.FaultLabel.Content = fault.FaultMessage;
+				this.ErrorCodeLabel.Content = "Код ошибки: " + fault.FaultCode.ToString();
+				this.FaultLabel.Content = "Отказ: " + fault.FaultMessage;
 
-				await SendMessageAsync(server, $"TrM|{fault.FaultCode}|{fault.FaultMessage}");
+				if (server.Connected)
+					await SendMessageAsync(server, $"TrM|{fault.FaultCode}|{fault.FaultMessage}|{IdentificatorTextBox.Text}|{FromTextBox.Text}|{ToTextBox.Text}");
 			}
 			catch (Exception ex)
 			{

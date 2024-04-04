@@ -13,11 +13,14 @@
     </Window.Background>
     <Grid>
         <TextBox x:Name="IdentificatorTextBox" HorizontalAlignment="Left" Margin="34,27,0,0" TextWrapping="Wrap" Text="Identificator" VerticalAlignment="Top" Width="228" Height="46" FontSize="20" IsEnabled="False" IsReadOnly="True"/>
-        <Label x:Name="FaultLabel" Content="Fault message will be here...." HorizontalAlignment="Left" Margin="40,175,0,0" VerticalAlignment="Top" Height="58" Width="553" FontSize="18"/>
+        <Label x:Name="FaultLabel" Content="Fault message will be here...." HorizontalAlignment="Left" Margin="40,137,0,0" VerticalAlignment="Top" Height="58" Width="553" FontSize="18"/>
         <Button x:Name="GenerateFaultButton" Content="Randomize fault" HorizontalAlignment="Left" Margin="40,311,0,0" VerticalAlignment="Top" Height="36" Width="280" FontSize="18" Click="GenerateFaultButton_Click"/>
-        <Label x:Name="ErrorCodeLabel" Content="Error code wille be here...." HorizontalAlignment="Left" Margin="40,109,0,0" VerticalAlignment="Top" Height="36" Width="276" FontSize="18"/>
+        <Label x:Name="ErrorCodeLabel" Content="Error code wille be here...." HorizontalAlignment="Left" Margin="40,91,0,0" VerticalAlignment="Top" Height="36" Width="276" FontSize="18"/>
         <Button x:Name="RandomizePlaneButton" Content="Randomize plane" HorizontalAlignment="Left" Margin="337,311,0,0" VerticalAlignment="Top" Height="36" Width="280" FontSize="18" Click="RandomizePlaneButton_Click"/>
         <Button x:Name="ConnectButton" Content="Reconnect" HorizontalAlignment="Left" Margin="462,34,0,0" VerticalAlignment="Top" Height="32" Width="165" FontSize="18" Click="ConnectButton_Click"/>
+        <Label Content="Label" HorizontalAlignment="Left" Height="0" Margin="-150,186,0,0" VerticalAlignment="Top" Width="247"/>
+        <TextBox x:Name="FromTextBox" HorizontalAlignment="Left" Margin="40,198,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="ToTextBox" HorizontalAlignment="Left" Margin="40,238,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
 
     </Grid>
 </Window>

@@ -47,6 +47,7 @@ namespace Entities
             Id = Guid.NewGuid();
             FaultCode = faultCode;
             FaultMessage = faultMessage;
+            PlaneIdentificator = planeIdentificator;
             FromPlace = fromPlace;
             ToPlace = toPlace;
             RecordUTCDate = recordUTCDate;
