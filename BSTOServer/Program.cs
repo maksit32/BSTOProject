@@ -75,13 +75,14 @@ namespace BSTOServer
 			{
 				while (client.Connected)
 				{
+					string receivedMessage = await ReceiveMessageAsync(client);
+
 					//развертка базы (Scoped lifetime)
 					var config = new ConfigurationBuilder()
 					.AddJsonFile(appSettingsPath, optional: false, reloadOnChange: true)
 					.Build();
 					using PostgreSqlDb postgreeDb = new PostgreSqlDb(connectionString: config.GetSection("PostgreeSqlConnectionString").Value ?? throw new NullReferenceException());
 
-					string receivedMessage = await ReceiveMessageAsync(client);
 
 					switch (receivedMessage)
 					{
@@ -175,6 +176,8 @@ namespace BSTOServer
 			{
 				while (client.Connected)
 				{
+					string receivedMessage = await ReceiveMessageAsync(client);
+
 					bool correctData = false;
 					//развертка базы (Scoped lifetime)
 					var config = new ConfigurationBuilder()
@@ -183,7 +186,6 @@ namespace BSTOServer
 					using PostgreSqlDb postgreeDb = new PostgreSqlDb(connectionString: config.GetSection("PostgreeSqlConnectionString").Value ?? throw new NullReferenceException());
 
 
-					string receivedMessage = await ReceiveMessageAsync(client);
 
 					switch (receivedMessage)
 					{
@@ -214,7 +216,16 @@ namespace BSTOServer
 									//если данные корректны, то запись в БД
 									if (correctData)
 									{
-										await postgreeDb.AddPlaneFault(new PlaneFaultData(int.Parse(dataArr[0]), dataArr[1], dataArr[2], dataArr[3], dataArr[4], DateTime.UtcNow));
+										PlaneFaultData planeFaultData = new PlaneFaultData(int.Parse(dataArr[0]), dataArr[1], dataArr[2], dataArr[3], dataArr[4], DateTime.UtcNow);
+										//проверка на повторную ошибку от БСТО
+										if (await postgreeDb.CheckData(planeFaultData))
+										{
+											//отправка в БД
+											await postgreeDb.AddPlaneFault(planeFaultData);
+											//отправка в службу ТОиР
+											string sendMess = SerializeClassObject(planeFaultData);
+											await SendMessageAsync(toirClient, "NewDt|" + sendMess);
+										}	
 									}
 								}
 							}

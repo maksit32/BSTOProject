@@ -66,7 +66,7 @@ namespace BSTOServer.Databases
 			oldFault.PlaneIdentificator = fault.PlaneIdentificator;
 			oldFault.FromPlace = fault.FromPlace;
 			oldFault.ToPlace = fault.ToPlace;
-			oldFault.RecordUTCDate = fault.RecordUTCDate;
+			oldFault.RecordDate = fault.RecordDate;
 
 			await this.SaveChangesAsync();
 			return true;
@@ -82,5 +82,15 @@ namespace BSTOServer.Databases
 			await this.SaveChangesAsync();
 			return true;
 		}
+
+		public async Task<bool> CheckData(PlaneFaultData newFault)
+		{
+			var obj = await FaultsTable.FirstOrDefaultAsync(f => f.PlaneIdentificator == newFault.PlaneIdentificator
+															&& f.FromPlace == newFault.FromPlace && f.ToPlace == newFault.ToPlace
+															&& DateTime.Now - f.RecordDate < TimeSpan.FromMinutes(30));
+			//такое объект не найден (проверку прошел)
+			if (obj is null) return true;
+			return false;
+        }
 	}
 }
