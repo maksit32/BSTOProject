@@ -5,9 +5,34 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EngineeringClient"
         mc:Ignorable="d"
-        Title="TOIRApplication" Height="450" Width="800" Icon="/flight_30822.ico" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Loaded="Window_Loaded" Closing="Window_Closing">
-    <Grid>
-        <Button x:Name="ConnectButton" Content="Connect" Margin="19,25,480,348" Click="ConnectButton_Click" FontSize="18"/>
+        Title="TOIRApplication" Height="537" Width="1053" Icon="/flight_30822.ico" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Loaded="Window_Loaded" Closing="Window_Closing">
+    <Grid Background="Black">
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Menu VerticalAlignment="Top" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" FontSize="20" FontFamily="Bahnschrift SemiCondensed" Background="#FFEBFFDE">
+            <MenuItem x:Name="AboutAuthorMenuItem" Header="Об авторе" Click="AboutAuthorMenuItem_Click"></MenuItem>
+            <MenuItem x:Name="AboutProgramMenuItem" Header="О программе" Click="AboutProgramMenuItem_Click" ></MenuItem>
+            <MenuItem x:Name="ConnectionMenuItem" Header="Подключение к серверу" Click="ConnectionMenuItem_Click" ></MenuItem>
+            <MenuItem Header="Действия с данными">
+                <MenuItem x:Name="AddDataMenuItem" Header="Добавить новые данные в СУБД" Click="AddDataMenuItem_Click" ></MenuItem>
+                <MenuItem x:Name="ChangeDataMenuItem" Header="Изменить выбранную вами строку" Click="ChangeDataMenuItem_Click"></MenuItem>
+                <MenuItem x:Name="DeleteByIdMenuitem" Header="Удалить выбранную вами строку" Click="DeleteByIdMenuitem_Click"></MenuItem>
+            </MenuItem>
+            <MenuItem x:Name="ExcelCreationMenuItem" Header="Создание Excel файла" Click="ExcelCreationMenuItem_Click"></MenuItem>
+            <MenuItem x:Name="ExitMenuItem" Header="Выход" Click="ExitMenuItem_Click"></MenuItem>
+        </Menu>
+        <DataGrid x:Name="FaultsDataGrid"  Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Grid.RowSpan="5" Margin="0 25 0 0" Cursor="Hand" FontFamily="Bahnschrift SemiCondensed" FontSize="16" IsReadOnly="True" ScrollViewer.HorizontalScrollBarVisibility="Visible" Background="#FFFFF6E5"/>
+
 
 
     </Grid>

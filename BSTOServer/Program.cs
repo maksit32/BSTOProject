@@ -10,6 +10,7 @@ using Entities;
 
 using static JSONLibrary.JSONLibrary;
 using static TCPLibrary.TCPLibrary;
+using System.Text.Json;
 
 
 //сервер для приема сообщений от воздушного судна(ВС)
@@ -53,10 +54,10 @@ namespace BSTOServer
 				//удаление старого лога при перезапуске сервера
 				logger.RemoveLogFile();
 				//ожидаем подключения БСТО ВС
-				planeClient = await WaitIncomingConnectionAsync(new TcpListener(ip, portPlane));
+				planeClient = await WaitIncomingConnectionAsync(new TcpListener(ip, portPlane), "с БСТО ВС");
 				ServeAirplaneBstoAsync(planeClient);
 				//ожидаем поключение клиента (ТОиР)
-				toirClient = await WaitIncomingConnectionAsync(new TcpListener(ip, portToir));
+				toirClient = await WaitIncomingConnectionAsync(new TcpListener(ip, portToir), "со службой ТОиР");
 				ServeEngineeringClientAsync(toirClient);
 				await Console.Out.WriteLineAsync("Для выключения сервера нажмите на любую клавишу");
 				Console.ReadLine();
@@ -71,7 +72,6 @@ namespace BSTOServer
 		#region [EngineeringCommunication]
 		private static async Task ServeEngineeringClientAsync(TcpClient client)
 		{
-			await Console.Out.WriteLineAsync($"Подключение со службой ТОиР установлено. Время:  {DateTime.UtcNow}");
 			await SendMessageAsync(client, "ConnectedToServer");
 			while (client.Connected)
 			{
@@ -99,6 +99,16 @@ namespace BSTOServer
 								}
 							}
 							break;
+						case string message when receivedMessage == "ReadAll":
+							{
+								if (client.Connected)
+								{
+									var lst = await postgreeDb.ReadAllFailuresAsync();
+									var json = JsonSerializer.Serialize(lst);
+									await SendMessageAsync(client, $"ReadedAll|{json}");
+								}
+							}
+							break;
 						case string message when receivedMessage.Contains("ChangeJSON|"):
 							{
 								if (client.Connected)
@@ -111,19 +121,19 @@ namespace BSTOServer
 								}
 							}
 							break;
-						case string message when receivedMessage.Contains("ReadById|"):
-							{
-								if (client.Connected)
-								{
-									message = receivedMessage.Replace("ReadById|", "");
-									PlaneFaultData fault = await postgreeDb.ReadPlaneFaultByIdAsync(Guid.Parse(message));
-									if (fault is null) break;
-									//сериализация данных
-									string serializedStrObj = SerializeClassObject(fault);
-									await SendMessageAsync(client, "Readed|" + serializedStrObj);
-								}
-							}
-							break;
+						//case string message when receivedMessage.Contains("ReadById|"):
+						//	{
+						//		if (client.Connected)
+						//		{
+						//			message = receivedMessage.Replace("ReadById|", "");
+						//			PlaneFaultData fault = await postgreeDb.ReadPlaneFaultByIdAsync(Guid.Parse(message));
+						//			if (fault is null) break;
+						//			//сериализация данных
+						//			string serializedStrObj = SerializeClassObject(fault);
+						//			await SendMessageAsync(client, "Readed|" + serializedStrObj);
+						//		}
+						//	}
+						//	break;
 						case string message when receivedMessage.Contains("RemById|"):
 							{
 								if (client.Connected)
@@ -154,7 +164,6 @@ namespace BSTOServer
 									Console.ForegroundColor = ConsoleColor.Red;
 									await Console.Out.WriteLineAsync("Получена неизвестная команда");
 									await logger.LogToFileAsync(locker, $"Получена неизвестная команда от клиента ТОиР по адресу: {client.Client.RemoteEndPoint}");
-									await SendMessageAsync(client, "ErrorCommand");
 									Console.ForegroundColor = ConsoleColor.White;
 								}
 								else
@@ -175,8 +184,6 @@ namespace BSTOServer
 		//получение данных от БСТО, обработка со списком ошибок, формирование данных для отправки в БД
 		private static async Task ServeAirplaneBstoAsync(TcpClient client)
 		{
-			await Console.Out.WriteLineAsync($"Подключение с БСТО ВС установлено. Время:  {DateTime.UtcNow}");
-
 			while (client.Connected)
 			{
 				try

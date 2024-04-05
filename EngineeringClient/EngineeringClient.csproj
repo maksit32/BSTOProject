@@ -10,11 +10,11 @@
 
   <ItemGroup>
     <None Remove="flight_30822.ico" />
+    <None Remove="Forms\flight_30822.ico" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Icons\" />
-    <Folder Include="Forms\" />
     <Folder Include="Classes\" />
     <Folder Include="Logs\" />
   </ItemGroup>
@@ -28,6 +28,7 @@
 
   <ItemGroup>
     <Resource Include="flight_30822.ico" />
+    <Resource Include="Forms\flight_30822.ico" />
   </ItemGroup>
 
 </Project>

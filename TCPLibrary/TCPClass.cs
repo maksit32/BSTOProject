@@ -9,7 +9,7 @@ namespace TCPLibrary
 {
 	public static class TCPLibrary
 	{
-		public static async Task<TcpClient> WaitIncomingConnectionAsync(TcpListener listen)
+		public static async Task<TcpClient> WaitIncomingConnectionAsync(TcpListener listen, string message)
 		{
 			if (listen is null)
 			{
@@ -17,13 +17,13 @@ namespace TCPLibrary
 			}
 
 			listen.Start();
-			Console.ForegroundColor = ConsoleColor.Blue;
+			Console.ForegroundColor = ConsoleColor.Red;
 			Console.WriteLine($"Ожидаем подключения на {listen.LocalEndpoint}.");
 
 			//получить клиента
 			TcpClient client = await listen.AcceptTcpClientAsync();
-
-			Console.WriteLine($"Подключение с {client.Client.RemoteEndPoint} установлено.");
+			Console.ForegroundColor = ConsoleColor.Blue;
+			Console.WriteLine($"Подключение {message} по ip {client.Client.RemoteEndPoint} установлено. Время:  {DateTime.UtcNow}");
 			Console.ResetColor();
 			return client;
 		}
@@ -56,7 +56,7 @@ namespace TCPLibrary
 			if (client.Connected)
 			{
 				await client.Client.SendAsync(Encoding.UTF8.GetBytes(message));
-			}
+            }
 		}
 
 		public static async Task<string> ReceiveMessageAsync(TcpClient client)
@@ -69,7 +69,7 @@ namespace TCPLibrary
 			if (client.Connected)
 			{
 				// буфер для получения данных
-				byte[] responseBytes = new byte[4096];
+				byte[] responseBytes = new byte[131072];
 				// получаем данные
 				int bytesCount = await client.Client.ReceiveAsync(responseBytes);
 				// преобразуем полученные данные в строку

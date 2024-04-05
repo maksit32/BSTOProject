@@ -1,0 +1,24 @@
+﻿<Window x:Name="Window" x:Class="EngineeringClient.Forms.OperationForm"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:EngineeringClient.Forms"
+        mc:Ignorable="d"
+        Title="OperationForm" Height="457" Width="909" Icon="/Forms/flight_30822.ico" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+    <Grid>
+        <Label x:Name="OperationLabel" Content="Label" HorizontalAlignment="Left" Margin="110,23,0,0" VerticalAlignment="Top" FontSize="20" Width="773"/>
+        <TextBox x:Name="ErrorCodeTextBox" HorizontalAlignment="Left" Margin="38,86,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="205" RenderTransformOrigin="0.175,-0.547" Height="40" Text="Код ошибки"/>
+        <TextBox x:Name="FaultMessageTextBox" HorizontalAlignment="Left" Margin="38,159,0,0" TextWrapping="Wrap" Text="Текст ошибки" VerticalAlignment="Top" Width="205" RenderTransformOrigin="0.175,-0.547" Height="40"/>
+        <TextBox x:Name="PlaneIdentificatorTextBox" HorizontalAlignment="Left" Margin="38,229,0,0" TextWrapping="Wrap" Text="Идентификатор ВС" VerticalAlignment="Top" Width="205" RenderTransformOrigin="0.175,-0.547" Height="40"/>
+        <TextBox x:Name="FromPlaceTextBox" HorizontalAlignment="Left" Margin="38,297,0,0" TextWrapping="Wrap" Text="Код аэропорта вылета" VerticalAlignment="Top" Width="205" RenderTransformOrigin="0.175,-0.547" Height="40"/>
+        <TextBox x:Name="ToPlaceTextBox" HorizontalAlignment="Left" Margin="38,357,0,0" TextWrapping="Wrap" Text="Код аэропорта прилета" VerticalAlignment="Top" Width="205" RenderTransformOrigin="0.175,-0.547" Height="40"/>
+        <Label x:Name="CodeLabel" Content="Label" HorizontalAlignment="Left" Margin="289,93,0,0" VerticalAlignment="Top" Width="339"/>
+        <Label x:Name="FaultMessageLabel" Content="Label" HorizontalAlignment="Left" Margin="289,166,0,0" VerticalAlignment="Top" Width="339"/>
+        <Label x:Name="PlaneIdentificatorLabel" Content="Label" HorizontalAlignment="Left" Margin="289,236,0,0" VerticalAlignment="Top" Width="339"/>
+        <Label x:Name="FromPlaceLabel" Content="Label" HorizontalAlignment="Left" Margin="289,311,0,0" VerticalAlignment="Top" Width="339"/>
+        <Label x:Name="ToPlaceLabel" Content="Label" HorizontalAlignment="Left" Margin="289,364,0,0" VerticalAlignment="Top" Width="339"/>
+        <Button x:Name="SendButton" Content="Отправить" HorizontalAlignment="Left" Margin="684,357,0,0" VerticalAlignment="Top" Height="55" Width="199" FontSize="20" FontFamily="Bookman Old Style" Click="SendButton_Click"/>
+
+    </Grid>
+</Window>
