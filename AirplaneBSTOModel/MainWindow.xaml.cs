@@ -135,5 +135,30 @@ namespace AirplaneBSTOModel
 				MessageBox.Show(ex.Message);
 			}
 		}
+
+		private void FromTextBox_KeyDown(object sender, KeyEventArgs e)
+		{
+			if(FromTextBox.Text.Length >= 4)
+				e.Handled = true;
+		}
+
+		private void FromTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+		{
+			char inp = e.Text[0];
+			if (inp < 'A' || inp > 'Z')
+				e.Handled = true;
+		}
+		private void ToTextBox_KeyDown(object sender, KeyEventArgs e)
+		{
+			if (ToTextBox.Text.Length >= 4)
+				e.Handled = true;
+		}
+		private void ToTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+		{
+			char inp = e.Text[0];
+			if (inp < 'A' || inp > 'Z')
+				e.Handled = true;
+		}
+
 	}
 }

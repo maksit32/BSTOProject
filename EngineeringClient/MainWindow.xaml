@@ -5,12 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EngineeringClient"
         mc:Ignorable="d"
-        Title="TOIRApplication" Height="450" Width="800" Icon="/flight_30822.ico" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Loaded="Window_Loaded">
+        Title="TOIRApplication" Height="450" Width="800" Icon="/flight_30822.ico" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Loaded="Window_Loaded" Closing="Window_Closing">
     <Grid>
-        <GroupBox Header="Login" Margin="168,121,159,75" FontSize="18">
-            <Button x:Name="ConnectButton" Content="Connect" Margin="128,0,115,0" Height="62" Click="ConnectButton_Click"/>
+        <Button x:Name="ConnectButton" Content="Connect" Margin="19,25,480,348" Click="ConnectButton_Click" FontSize="18"/>
 
-        </GroupBox>
 
     </Grid>
 </Window>

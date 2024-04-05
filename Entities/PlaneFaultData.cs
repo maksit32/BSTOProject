@@ -17,7 +17,7 @@ namespace Entities
         public string PlaneIdentificator { get; set; }
         public string FromPlace { get; set; }
         public string ToPlace { get; set; }
-        public DateTime RecordDate { get; set; }
+        public DateTime RecordUTCDate { get; set; }
 
         protected PlaneFaultData() { }
 
@@ -50,11 +50,11 @@ namespace Entities
             PlaneIdentificator = planeIdentificator;
             FromPlace = fromPlace;
             ToPlace = toPlace;
-            RecordDate = recordUTCDate;
+            RecordUTCDate = recordUTCDate;
         }
         public override string ToString()
         {
-            return $"Код: {FaultCode}	Отказ: {FaultMessage}	Идентификатор ВС: {PlaneIdentificator}	Время отказа: {RecordDate}";
+            return $"Код: {FaultCode}	Отказ: {FaultMessage}	Идентификатор ВС: {PlaneIdentificator}	Время отказа: {RecordUTCDate}";
         }
     }
 }

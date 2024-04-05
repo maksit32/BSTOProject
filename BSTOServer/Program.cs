@@ -60,6 +60,8 @@ namespace BSTOServer
 				ServeEngineeringClientAsync(toirClient);
 				await Console.Out.WriteLineAsync("Для выключения сервера нажмите на любую клавишу");
 				Console.ReadLine();
+				//отправка службе ТОиР сигнала, что сервер выключается
+				await NotifyTcpClient(toirClient, "Disconnect");
 			}
 			catch (Exception ex)
 			{
@@ -71,9 +73,9 @@ namespace BSTOServer
 		{
 			await Console.Out.WriteLineAsync($"Подключение со службой ТОиР установлено. Время:  {DateTime.UtcNow}");
 			await SendMessageAsync(client, "ConnectedToServer");
-			try
+			while (client.Connected)
 			{
-				while (client.Connected)
+				try
 				{
 					string receivedMessage = await ReceiveMessageAsync(client);
 
@@ -118,7 +120,7 @@ namespace BSTOServer
 									if (fault is null) break;
 									//сериализация данных
 									string serializedStrObj = SerializeClassObject(fault);
-									await SendMessageAsync (client, "Readed|" + serializedStrObj);
+									await SendMessageAsync(client, "Readed|" + serializedStrObj);
 								}
 							}
 							break;
@@ -128,7 +130,7 @@ namespace BSTOServer
 								{
 									message = receivedMessage.Replace("RemById|", "");
 									var res = await postgreeDb.RemoveByGuidPlaneFaultAsync(Guid.Parse(message));
-									if(res) await SendMessageAsync(client, "Removed");
+									if (res) await SendMessageAsync(client, "Removed");
 									else await SendMessageAsync(client, "NotRemoved");
 								}
 							}
@@ -139,7 +141,6 @@ namespace BSTOServer
 								{
 									Console.ForegroundColor = ConsoleColor.Green;
 									var addr = client.Client.RemoteEndPoint;
-									await SendMessageAsync(client, "DisconnectSuccess");
 									client.Close(); //auto dispose()
 									await Console.Out.WriteLineAsync($"Клиент службы ТОиР отключен от сервера. Адрес: {addr}");
 									return;
@@ -154,15 +155,18 @@ namespace BSTOServer
 									await Console.Out.WriteLineAsync("Получена неизвестная команда");
 									await logger.LogToFileAsync(locker, $"Получена неизвестная команда от клиента ТОиР по адресу: {client.Client.RemoteEndPoint}");
 									await SendMessageAsync(client, "ErrorCommand");
+									Console.ForegroundColor = ConsoleColor.White;
 								}
+								else
+									client.Close();
 							}
 							break;
 					}
 				}
-			}
-			catch (Exception ex)
-			{
-				await logger.LogToFileAsync(locker, ex.Message);
+				catch (Exception ex)
+				{
+					await logger.LogToFileAsync(locker, ex.Message);
+				}
 			}
 		}
 		#endregion
@@ -172,9 +176,10 @@ namespace BSTOServer
 		private static async Task ServeAirplaneBstoAsync(TcpClient client)
 		{
 			await Console.Out.WriteLineAsync($"Подключение с БСТО ВС установлено. Время:  {DateTime.UtcNow}");
-			try
+
+			while (client.Connected)
 			{
-				while (client.Connected)
+				try
 				{
 					string receivedMessage = await ReceiveMessageAsync(client);
 
@@ -223,16 +228,21 @@ namespace BSTOServer
 											//отправка в БД
 											await postgreeDb.AddPlaneFault(planeFaultData);
 											//отправка в службу ТОиР
-											string sendMess = SerializeClassObject(planeFaultData);
-											await SendMessageAsync(toirClient, "NewDt|" + sendMess);
-										}	
+											if (toirClient is not null && toirClient.Connected)
+											{
+												string sendMess = SerializeClassObject(planeFaultData);
+												await SendMessageAsync(toirClient, "NewDt|" + sendMess);
+											}
+										}
 									}
 								}
 							}
 							break;
 						case string message when receivedMessage.Contains("Disconnect"):
 							{
+								Console.ForegroundColor = ConsoleColor.Green;
 								client.Close();
+								await Console.Out.WriteLineAsync($"БСТО была отключена");
 							}
 							break;
 						default:
@@ -242,17 +252,37 @@ namespace BSTOServer
 									Console.ForegroundColor = ConsoleColor.Red;
 									await Console.Out.WriteLineAsync("Получена неизвестная данные");
 									await logger.LogToFileAsync(locker, $"Получена неизвестные данные от БСТО");
+									Console.ForegroundColor = ConsoleColor.White;
 								}
+								else
+									client.Close();
 							}
 							break;
 					}
 				}
+				catch (Exception ex)
+				{
+					await logger.LogToFileAsync(locker, ex.Message);
+				}
 			}
-			catch (Exception ex)
+		}
+		#endregion
+		public static async Task NotifyTcpClient(TcpClient client, string message)
+		{
+			if (client is null)
 			{
-				await logger.LogToFileAsync(locker, ex.Message);
+				throw new ArgumentNullException(nameof(client));
 			}
-			#endregion
+
+			if (string.IsNullOrWhiteSpace(message))
+			{
+				throw new ArgumentException($"\"{nameof(message)}\" не может быть пустым или содержать только пробел.", nameof(message));
+			}
+			
+			if(client.Connected)
+			{
+				await SendMessageAsync(client, message);
+			}
 		}
 	}
 }
