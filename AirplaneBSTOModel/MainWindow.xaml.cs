@@ -94,16 +94,22 @@ namespace AirplaneBSTOModel
 			return identificator;
 		}
 
+		#region [UI func]
 		//генерация отказа, передача на сервер
 		private async void GenerateFaultButton_Click(object sender, RoutedEventArgs e)
 		{
+			if (FromTextBox.Text.Length != 4 || ToTextBox.Text.Length != 4)
+			{
+				MessageBox.Show("ICAO коды аэропортов должны состоять из 4 заглавных букв!");
+				return;
+			}
 			try
 			{
 				Random r = new Random();
 				Fault fault = faultsList[r.Next(faultsList.Count)];
 
 				this.ErrorCodeLabel.Content = "Код ошибки: " + fault.FaultCode.ToString();
-				this.FaultLabel.Content = "Отказ: " + fault.FaultMessage;
+				this.FaultLabel.Content = "Внимание! " + fault.FaultMessage;
 
 				if (server.Connected)
 					await SendMessageAsync(server, $"TrM|{fault.FaultCode}|{fault.FaultMessage}|{IdentificatorTextBox.Text}|{FromTextBox.Text}|{ToTextBox.Text}");
@@ -138,7 +144,7 @@ namespace AirplaneBSTOModel
 
 		private void FromTextBox_KeyDown(object sender, KeyEventArgs e)
 		{
-			if(FromTextBox.Text.Length >= 4)
+			if (FromTextBox.Text.Length >= 4)
 				e.Handled = true;
 		}
 
@@ -159,6 +165,6 @@ namespace AirplaneBSTOModel
 			if (inp < 'A' || inp > 'Z')
 				e.Handled = true;
 		}
-
+		#endregion
 	}
 }

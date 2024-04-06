@@ -113,7 +113,7 @@ namespace BSTOServer
 							{
 								if (client.Connected)
 								{
-									message = receivedMessage.Replace("UpdateJSON|", "");
+									message = receivedMessage.Replace("ChangeJSON|", "");
 									PlaneFaultData updFaultData = DeserializeClassObject(message);
 									var res = await postgreeDb.UpdatePlaneFaultAsync(updFaultData);
 									if (res) await SendMessageAsync(client, "Updated");
@@ -197,8 +197,6 @@ namespace BSTOServer
 					.Build();
 					using PostgreSqlDb postgreeDb = new PostgreSqlDb(connectionString: config.GetSection("PostgreeSqlConnectionString").Value ?? throw new NullReferenceException());
 
-
-
 					switch (receivedMessage)
 					{
 						//обработка полученного значения
@@ -237,8 +235,9 @@ namespace BSTOServer
 											//отправка в службу ТОиР
 											if (toirClient is not null && toirClient.Connected)
 											{
-												string sendMess = SerializeClassObject(planeFaultData);
-												await SendMessageAsync(toirClient, "NewDt|" + sendMess);
+												//string sendMess = SerializeClassObject(planeFaultData);
+												//await SendMessageAsync(toirClient, "NewDt|" + sendMess);
+												await SendMessageAsync(toirClient, "NewDt");
 											}
 										}
 									}

@@ -57,7 +57,7 @@ namespace BSTOServer.Databases
 			{
 				throw new ArgumentNullException(nameof(fault));
 			}
-
+			//поиск старого объекта по id
 			var oldFault = await ReadPlaneFaultByIdAsync(fault.Id);
 			if (oldFault is null) { return false; }
 

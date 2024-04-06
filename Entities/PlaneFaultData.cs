@@ -21,7 +21,38 @@ namespace Entities
 
         protected PlaneFaultData() { }
 
-        public PlaneFaultData(int faultCode, string faultMessage, string planeIdentificator, string fromPlace, string toPlace, DateTime recordUTCDate)
+		public PlaneFaultData(Guid Id, int faultCode, string faultMessage, string planeIdentificator, string fromPlace, string toPlace, DateTime recordUTCDate)
+		{
+			if (faultCode < 1 || faultCode > 3) throw new ArgumentOutOfRangeException("Fault code must be between 1 and 3");
+			if (string.IsNullOrWhiteSpace(faultMessage))
+			{
+				throw new ArgumentException($"\"{nameof(faultMessage)}\" не может быть пустым или содержать только пробел.", nameof(faultMessage));
+			}
+
+			if (string.IsNullOrWhiteSpace(fromPlace))
+			{
+				throw new ArgumentException($"\"{nameof(fromPlace)}\" не может быть пустым или содержать только пробел.", nameof(fromPlace));
+			}
+
+			if (string.IsNullOrWhiteSpace(planeIdentificator))
+			{
+				throw new ArgumentException($"\"{nameof(planeIdentificator)}\" не может быть пустым или содержать только пробел.", nameof(planeIdentificator));
+			}
+
+			if (string.IsNullOrWhiteSpace(toPlace))
+			{
+				throw new ArgumentException($"\"{nameof(toPlace)}\" не может быть пустым или содержать только пробел.", nameof(toPlace));
+			}
+
+			this.Id = Id;
+			FaultCode = faultCode;
+			FaultMessage = faultMessage;
+			PlaneIdentificator = planeIdentificator;
+			FromPlace = fromPlace;
+			ToPlace = toPlace;
+			RecordUTCDate = recordUTCDate;
+		}
+		public PlaneFaultData(int faultCode, string faultMessage, string planeIdentificator, string fromPlace, string toPlace, DateTime recordUTCDate)
         {
             if (faultCode < 1 || faultCode > 3) throw new ArgumentOutOfRangeException("Fault code must be between 1 and 3");
             if (string.IsNullOrWhiteSpace(faultMessage))

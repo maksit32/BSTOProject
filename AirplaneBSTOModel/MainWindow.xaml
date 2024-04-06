@@ -12,12 +12,72 @@
         </LinearGradientBrush>
     </Window.Background>
     <Grid>
-        <TextBox x:Name="IdentificatorTextBox" HorizontalAlignment="Left" Margin="34,27,0,0" TextWrapping="Wrap" Text="Identificator" VerticalAlignment="Top" Width="228" Height="46" FontSize="20" FontFamily="Bahnschrift SemiCondensed" IsEnabled="False" IsReadOnly="True"/>
+        <TextBox x:Name="IdentificatorTextBox" HorizontalAlignment="Left" Margin="40,27,0,0" TextWrapping="Wrap" Text="Identificator" VerticalAlignment="Top" Width="228" Height="46" FontSize="20" FontFamily="Bahnschrift SemiCondensed" IsEnabled="False" IsReadOnly="True"/>
         <Label x:Name="FaultLabel" Content="Fault message will be here...." HorizontalAlignment="Left" Margin="40,137,0,0" VerticalAlignment="Top" Height="58" Width="587" FontSize="18"/>
-        <Button x:Name="GenerateFaultButton" Content="Generate fault" HorizontalAlignment="Left" Margin="40,311,0,0" VerticalAlignment="Top" Height="36" Width="280" FontSize="20" FontFamily="Bahnschrift SemiCondensed" Click="GenerateFaultButton_Click"/>
+        <Button x:Name="GenerateFaultButton" Content="Generate fault" HorizontalAlignment="Left" Margin="40,311,0,0" VerticalAlignment="Top" Height="36" Width="280" FontSize="20" FontFamily="Bahnschrift SemiCondensed" Click="GenerateFaultButton_Click">
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Background" Value="LightBlue"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Border Background="{TemplateBinding Background}">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="Red"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
         <Label x:Name="ErrorCodeLabel" Content="Error code wille be here...." HorizontalAlignment="Left" Margin="40,91,0,0" VerticalAlignment="Top" Height="36" Width="297" FontSize="18"/>
-        <Button x:Name="RandomizePlaneButton" Content="Randomize plane" HorizontalAlignment="Left" Margin="337,311,0,0" VerticalAlignment="Top" Height="36" Width="280" FontSize="20" FontFamily="Bahnschrift SemiCondensed" Click="RandomizePlaneButton_Click"/>
-        <Button x:Name="ConnectButton" Content="Reconnect" HorizontalAlignment="Left" Margin="462,34,0,0" VerticalAlignment="Top" Height="32" Width="165" FontSize="20" FontFamily="Bahnschrift SemiCondensed" Click="ConnectButton_Click"/>
+        <Button x:Name="RandomizePlaneButton" Content="Randomize plane" HorizontalAlignment="Left" Margin="337,311,0,0" VerticalAlignment="Top" Height="36" Width="280" FontSize="20" FontFamily="Bahnschrift SemiCondensed" Click="RandomizePlaneButton_Click">
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Background" Value="LightBlue"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Border Background="{TemplateBinding Background}">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="LightGreen"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+        <Button x:Name="ConnectButton" Content="Reconnect" HorizontalAlignment="Left" Margin="462,34,0,0" VerticalAlignment="Top" Height="32" Width="165" FontSize="20" FontFamily="Bahnschrift SemiCondensed" Click="ConnectButton_Click">
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Background" Value="LightBlue"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Border Background="{TemplateBinding Background}">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#1E90FF"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
         <Label Content="Label" HorizontalAlignment="Left" Height="0" Margin="-150,186,0,0" VerticalAlignment="Top" Width="247"/>
         <TextBox x:Name="FromTextBox" HorizontalAlignment="Left" Margin="40,198,0,0" TextWrapping="Wrap" Text="From" VerticalAlignment="Top" Width="222" FontSize="16" Height="39" KeyDown="FromTextBox_KeyDown" PreviewTextInput="FromTextBox_PreviewTextInput"/>
         <TextBox x:Name="ToTextBox" HorizontalAlignment="Left" Margin="40,253,0,0" TextWrapping="Wrap" Text="To" VerticalAlignment="Top" Width="222" FontSize="16" Height="37" PreviewTextInput="ToTextBox_PreviewTextInput" KeyDown="ToTextBox_KeyDown"/>

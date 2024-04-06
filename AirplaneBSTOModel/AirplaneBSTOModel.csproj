@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>Icons\flight_30822.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,7 +14,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Icons\" />
+    <Content Include="Icons\flight_30822.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Logs\" />
   </ItemGroup>
 

@@ -14,11 +14,13 @@ using LogLibrary.Classes;
 using LogLibrary.Interfaces;
 using System.Collections.ObjectModel;
 using Entities;
+using Excel = Microsoft.Office.Interop.Excel;
 
 
 using static TCPLibrary.TCPLibrary;
 using Newtonsoft.Json;
 using EngineeringClient.Forms;
+using System.IO;
 
 
 //Приложение службы ТОиР
@@ -42,6 +44,7 @@ namespace EngineeringClient
 		private object locker2 = new();
 		//коллекция с автообновлением (для работы с таблицами и полученными данными с pgSql)
 		private ObservableCollection<PlaneFaultData> faultCollection = new ObservableCollection<PlaneFaultData>();
+		private readonly string excelPath = Environment.CurrentDirectory + "\\..\\..\\..\\ExcelFiles\\failures.xlsx";
 
 
 		public MainWindow()
@@ -108,29 +111,86 @@ namespace EngineeringClient
 		}
 		private void ExcelCreationMenuItem_Click(object sender, RoutedEventArgs e)
 		{
+			// Создание нового экземпляра приложения Excel
+			Excel.Application exApp = new Excel.Application();
+			// Создание новой книги Excel
+			Excel.Workbook workbook = exApp.Workbooks.Add();
+			try
+			{
+				if (FaultsDataGrid.Items.Count > 0)
+				{
+					//строк
+					int dataGridRowCount = FaultsDataGrid.Items.Count;
+					//колонок
+					int dataGridColumnCount = FaultsDataGrid.Columns.Count;
 
+					for (int i = 1; i < FaultsDataGrid.Columns.Count + 1; i++)
+					{
+						exApp.Cells[1, i] = FaultsDataGrid.Columns[i - 1].Header;
+					}
+					for (int i = 0; i < dataGridRowCount; i++)
+					{
+						for (int j = 0; j < dataGridColumnCount;)
+						{
+							exApp.Cells[i + 2, j + 1] = faultCollection[i].Id.ToString();
+							j++;
+							exApp.Cells[i + 2, j + 1] = faultCollection[i].FaultCode;
+							j++;
+							exApp.Cells[i + 2, j + 1] = faultCollection[i].FaultMessage;
+							j++;
+							exApp.Cells[i + 2, j + 1] = faultCollection[i].PlaneIdentificator;
+							j++;
+							exApp.Cells[i + 2, j + 1] = faultCollection[i].FromPlace;
+							j++;
+							exApp.Cells[i + 2, j + 1] = faultCollection[i].ToPlace;
+							j++;
+							exApp.Cells[i + 2, j + 1] = faultCollection[i].RecordUTCDate;
+							j++;
+						}
+					}
+					//авто расширение
+					exApp.Columns.AutoFit();
+
+					//удаление старого файла
+					File.Delete(excelPath);
+					// Сохранение книги Excel
+					workbook.SaveAs(excelPath);
+					//exApp.Visible = true;  //отладка
+					MessageBox.Show($"Файл Excel успешно создан!{Environment.NewLine}Путь: {excelPath}", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+				}
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show($"Возникла ошибка при работе с Excel!{Environment.NewLine}{ex}", "", MessageBoxButton.OK, MessageBoxImage.Error);
+			}
+			finally
+			{
+				// Закрытие книги и приложения Excel
+				workbook.Close();
+				exApp.Quit();
+			}
 		}
 		private void AddDataMenuItem_Click(object sender, RoutedEventArgs e)
 		{
 			if (server.Connected)
 			{
-				OperationForm form = new OperationForm(server, "Добавление происшествия", null);
+				OperationForm form = new OperationForm(server, "Добавление происшествия", null, logger, locker);
 				form.Show();
 			}
 		}
 
-		private void ChangeDataMenuItem_Click(object sender, RoutedEventArgs e)
+		private async void ChangeDataMenuItem_Click(object sender, RoutedEventArgs e)
 		{
 			try
 			{
 				if (server.Connected)
 				{
 					PlaneFaultData fault = (PlaneFaultData)FaultsDataGrid.SelectedItem;
-					if (fault is not null)
+					if(fault is not null)
 					{
 						if (MessageBox.Show($"Вы уверены, что хотите изменить это событие?{Environment.NewLine}Id: {fault.Id}", "Внимание!", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
 						{
-							OperationForm form = new OperationForm(server, $"Изменение данных происшествия   id: {fault.Id}", fault);
+							OperationForm form = new OperationForm(server, $"Изменение данных происшествия   id: {fault.Id}", fault, logger, locker);
 							form.Show();
 						}
 						else
@@ -140,6 +200,7 @@ namespace EngineeringClient
 			}
 			catch (Exception ex)
 			{
+				await logger.LogToFileAsync(locker, ex.Message);
 				MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
 			}
 		}
@@ -196,9 +257,16 @@ namespace EngineeringClient
 						case string message when receivedMessage == "AddSuccess":
 							{
 								await SendMessageAsync(server, "ReadAll");
+								MessageBox.Show("Успешно добавлено!", "", MessageBoxButton.OK, MessageBoxImage.Information);
 							}
 							break;
 						case string message when receivedMessage == "Updated":
+							{
+								await SendMessageAsync(server, "ReadAll");
+								MessageBox.Show("Успешно изменено!", "", MessageBoxButton.OK, MessageBoxImage.Information);
+							}
+							break;
+						case string message when receivedMessage == "NewDt":
 							{
 								await SendMessageAsync(server, "ReadAll");
 							}
@@ -211,11 +279,17 @@ namespace EngineeringClient
 						case string message when receivedMessage == "Removed":
 							{
 								await SendMessageAsync(server, "ReadAll");
+								MessageBox.Show("Успешно удалено!", "", MessageBoxButton.OK, MessageBoxImage.Information);
 							}
 							break;
 						case string message when receivedMessage == "NotRemoved":
 							{
 								MessageBox.Show($"Неудачное удаление!{Environment.NewLine}Возможно такого id не существует!", "Внимание!", MessageBoxButton.OK, MessageBoxImage.Warning);
+							}
+							break;
+						case string message when receivedMessage == "ConnectedToServer":
+							{
+								MessageBox.Show("Успешно подключено!", "", MessageBoxButton.OK, MessageBoxImage.Information);
 							}
 							break;
 						case string message when receivedMessage == "Disconnect":

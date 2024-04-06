@@ -6,19 +6,41 @@
         xmlns:local="clr-namespace:EngineeringClient.Forms"
         mc:Ignorable="d"
         Title="OperationForm" Height="457" Width="909" Icon="/Forms/flight_30822.ico" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
-    <Grid>
-        <Label x:Name="OperationLabel" Content="Label" HorizontalAlignment="Left" Margin="110,23,0,0" VerticalAlignment="Top" FontSize="20" Width="773"/>
-        <TextBox x:Name="ErrorCodeTextBox" HorizontalAlignment="Left" Margin="38,86,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="205" RenderTransformOrigin="0.175,-0.547" Height="40" Text="Код ошибки"/>
-        <TextBox x:Name="FaultMessageTextBox" HorizontalAlignment="Left" Margin="38,159,0,0" TextWrapping="Wrap" Text="Текст ошибки" VerticalAlignment="Top" Width="205" RenderTransformOrigin="0.175,-0.547" Height="40"/>
-        <TextBox x:Name="PlaneIdentificatorTextBox" HorizontalAlignment="Left" Margin="38,229,0,0" TextWrapping="Wrap" Text="Идентификатор ВС" VerticalAlignment="Top" Width="205" RenderTransformOrigin="0.175,-0.547" Height="40"/>
-        <TextBox x:Name="FromPlaceTextBox" HorizontalAlignment="Left" Margin="38,297,0,0" TextWrapping="Wrap" Text="Код аэропорта вылета" VerticalAlignment="Top" Width="205" RenderTransformOrigin="0.175,-0.547" Height="40"/>
-        <TextBox x:Name="ToPlaceTextBox" HorizontalAlignment="Left" Margin="38,357,0,0" TextWrapping="Wrap" Text="Код аэропорта прилета" VerticalAlignment="Top" Width="205" RenderTransformOrigin="0.175,-0.547" Height="40"/>
-        <Label x:Name="CodeLabel" Content="Label" HorizontalAlignment="Left" Margin="289,93,0,0" VerticalAlignment="Top" Width="339"/>
-        <Label x:Name="FaultMessageLabel" Content="Label" HorizontalAlignment="Left" Margin="289,166,0,0" VerticalAlignment="Top" Width="339"/>
-        <Label x:Name="PlaneIdentificatorLabel" Content="Label" HorizontalAlignment="Left" Margin="289,236,0,0" VerticalAlignment="Top" Width="339"/>
-        <Label x:Name="FromPlaceLabel" Content="Label" HorizontalAlignment="Left" Margin="289,311,0,0" VerticalAlignment="Top" Width="339"/>
-        <Label x:Name="ToPlaceLabel" Content="Label" HorizontalAlignment="Left" Margin="289,364,0,0" VerticalAlignment="Top" Width="339"/>
-        <Button x:Name="SendButton" Content="Отправить" HorizontalAlignment="Left" Margin="684,357,0,0" VerticalAlignment="Top" Height="55" Width="199" FontSize="20" FontFamily="Bookman Old Style" Click="SendButton_Click"/>
+    <Grid Background="#FFD7F3FF">
+        <Label x:Name="OperationLabel" Content="Label" HorizontalAlignment="Center" Margin="110,23,0,0" VerticalAlignment="Top" FontSize="24" Width="773" FontFamily="Rockwell" FontWeight="Bold"/>
+
+        <TextBox x:Name="ErrorCodeTextBox" HorizontalAlignment="Left" Margin="38,86,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="205" RenderTransformOrigin="0.175,-0.547" Height="40" Text="Код ошибки" FontSize="18" FontFamily="Bahnschrift SemiCondensed" PreviewTextInput="ErrorCodeTextBox_PreviewTextInput"/>
+        <TextBox x:Name="FaultMessageTextBox" HorizontalAlignment="Left" Margin="38,140,0,0" TextWrapping="Wrap" Text="Текст ошибки" VerticalAlignment="Top" Width="205" RenderTransformOrigin="0.175,-0.547" Height="81" FontSize="18" FontFamily="Bahnschrift SemiCondensed" PreviewTextInput="FaultMessageTextBox_PreviewTextInput"/>
+        <TextBox x:Name="PlaneIdentificatorTextBox" HorizontalAlignment="Left" Margin="38,229,0,0" TextWrapping="Wrap" Text="Идентификатор ВС" VerticalAlignment="Top" Width="205" RenderTransformOrigin="0.175,-0.547" Height="40" FontSize="18" FontFamily="Bahnschrift SemiCondensed" PreviewTextInput="PlaneIdentificatorTextBox_PreviewTextInput"/>
+        <TextBox x:Name="FromPlaceTextBox" HorizontalAlignment="Left" Margin="38,297,0,0" TextWrapping="Wrap" Text="Код аэропорта вылета" VerticalAlignment="Top" Width="205" RenderTransformOrigin="0.175,-0.547" Height="40" FontSize="18" FontFamily="Bahnschrift SemiCondensed" PreviewTextInput="FromPlaceTextBox_PreviewTextInput" KeyDown="FromPlaceTextBox_KeyDown"/>
+        <TextBox x:Name="ToPlaceTextBox" HorizontalAlignment="Left" Margin="38,357,0,0" TextWrapping="Wrap" Text="Код аэропорта прилета" VerticalAlignment="Top" Width="205" RenderTransformOrigin="0.175,-0.547" Height="40" FontSize="18" FontFamily="Bahnschrift SemiCondensed" PreviewTextInput="ToPlaceTextBox_PreviewTextInput" KeyDown="ToPlaceTextBox_KeyDown"/>
+        <Label x:Name="CodeLabel" Content="Введите код ошибки в поле слева. От 1 до 3 включительно." HorizontalAlignment="Left" Margin="292,93,0,0" VerticalAlignment="Top" Width="492" FontSize="18" FontFamily="Bahnschrift SemiCondensed"/>
+        <Label x:Name="FaultMessageLabel" Content="Введите отказ в поле слева." HorizontalAlignment="Left" Margin="292,166,0,0" VerticalAlignment="Top" Width="339" FontSize="18" FontFamily="Bahnschrift SemiCondensed"/>
+        <Label x:Name="PlaneIdentificatorLabel" Content="Введите идентификатор ВС в поле слева." HorizontalAlignment="Left" Margin="292,236,0,0" VerticalAlignment="Top" Width="339" FontSize="18" FontFamily="Bahnschrift SemiCondensed"/>
+        <Label x:Name="FromPlaceLabel" Content="Введите ICAO аэропорта вылета в поле слева." HorizontalAlignment="Left" Margin="292,301,0,0" VerticalAlignment="Top" Width="352" FontSize="18" FontFamily="Bahnschrift SemiCondensed"/>
+        <Label x:Name="ToPlaceLabel" Content="Введите ICAO аэропорта прилета поле слева." HorizontalAlignment="Left" Margin="292,364,0,0" VerticalAlignment="Top" Width="352" FontSize="18" FontFamily="Bahnschrift SemiCondensed"/>
+
+        <Button x:Name="SendButton" Content="Отправить" HorizontalAlignment="Left" Margin="684,357,0,0" VerticalAlignment="Top" Height="55" Width="199" FontSize="20" FontFamily="Bookman Old Style" Click="SendButton_Click">
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Background" Value="#FFD3E8FF"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Border Background="{TemplateBinding Background}">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="LightSkyBlue"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
 
     </Grid>
 </Window>
